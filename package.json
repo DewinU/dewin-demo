@@ -10,7 +10,9 @@
     "generate": "drizzle-kit generate",
     "push": "drizzle-kit push",
     "migrate": "drizzle-kit migrate",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "seed": "drizzle-kit seed",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@types/better-sqlite3": "^7.6.11",
@@ -18,33 +20,36 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.32.0",
-    "lucide-react": "^0.408.0",
+    "lucide-react": "^0.411.0",
     "next": "^15.0.0-rc.0",
-    "react": "^19.0.0-rc-8b08e99e-20240713",
-    "react-dom": "^19.0.0-rc-8b08e99e-20240713",
+    "react": "^19.0.0-rc-512b09b2-20240718",
+    "react-dom": "^19.0.0-rc-512b09b2-20240718",
     "server-only": "^0.0.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^20.14.11",
     "@types/react": "npm:types-react@rc",
     "@types/react-dom": "npm:types-react-dom@rc",
     "babel-plugin-react-compiler": "^0.0.0-experimental-696af53-20240625",
-    "drizzle-kit": "^0.23.0",
+    "drizzle-kit": "^0.22.8",
     "eslint": "^8.57.0",
     "eslint-config-next": "15.0.0-rc.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react-compiler": "^0.0.0-experimental-0998c1e-20240625",
     "postcss": "^8.4.39",
     "prettier": "^3.3.3",
-    "tailwindcss": "^3.4.5",
+    "tailwindcss": "^3.4.6",
     "typescript": "^5.5.3"
   },
   "overrides": {
-    "react": "^19.0.0-rc-8b08e99e-20240713",
-    "react-dom": "^19.0.0-rc-8b08e99e-20240713",
+    "react": "^19.0.0-rc-512b09b2-20240718",
+    "react-dom": "^19.0.0-rc-512b09b2-20240718",
     "@types/react": "npm:types-react@rc",
     "@types/react-dom": "npm:types-react-dom@rc"
+  },
+  "volta": {
+    "node": "20.15.1"
   }
 }

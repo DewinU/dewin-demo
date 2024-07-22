@@ -1,4 +1,4 @@
-FROM node:20-slim as base
+FROM node:20-alpine as base
 FROM base as builder
 
 WORKDIR /app
@@ -9,3 +9,5 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
+
+EXPOSE 3000

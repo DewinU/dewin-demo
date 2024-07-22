@@ -7,6 +7,6 @@ export default {
   out: './db/migrations',
   dialect: 'sqlite',
   dbCredentials: {
-    url: 'demo.db',
+    url: process.env.DB_URL!,
   },
 } satisfies Config
