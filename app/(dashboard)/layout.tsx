@@ -15,7 +15,8 @@ export default function DashBoardLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body
+        className={`inline-flex ${geistSans.variable} ${geistMono.variable}`}>
         <NavBar />
         {children}
       </body>
