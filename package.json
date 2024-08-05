@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 5000",
     "lint": "next lint",
     "generate": "drizzle-kit generate",
     "push": "drizzle-kit push",
