@@ -1,8 +1,8 @@
 'use server'
-
 import { db } from '@/db'
 import { todos } from '@/db/schema'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 // export async function addTodo(previosState: any, formData: any) {
 //   console.log('previosState', previosState)
@@ -25,6 +25,7 @@ export async function addTodo(todoText: string) {
     console.error(err)
     return { error: 'An error occurred while adding the todo' }
   } finally {
-    revalidatePath('/todos')
+    // revalidatePath('/todos', 'page')
+    revalidateTag('todos')
   }
 }

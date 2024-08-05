@@ -40,7 +40,7 @@ export default function TodosList({ todos }: { todos: any }) {
           type='text'
           placeholder='Enter a new todo'
         />
-        <Button className='w-36' type='submit'>
+        <Button className='w-36' type='submit' disabled={isPending}>
           {isPending ? (
             <>
               <Loader2 className='mr-2 h-4 w-4 animate-spin' />
