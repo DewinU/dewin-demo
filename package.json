@@ -12,7 +12,7 @@
     "migrate": "drizzle-kit migrate",
     "studio": "drizzle-kit studio",
     "format": "prettier --write .",
-    "seed": "tsx ./db/seed.ts"
+    "seed": "tsx ./src/db/seed.ts"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.1",
@@ -21,12 +21,12 @@
     "better-sqlite3": "^11.1.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "drizzle-orm": "^0.32.1",
+    "drizzle-orm": "^0.32.2",
     "lucide-react": "^0.424.0",
     "next": "^15.0.0-canary.100",
-    "postcss": "^8.4.40",
-    "react": "^19.0.0-rc-8269d55d-20240802",
-    "react-dom": "^19.0.0-rc-8269d55d-20240802",
+    "postcss": "^8.4.41",
+    "react": "^19.0.0-rc-65903583-20240805",
+    "react-dom": "^19.0.0-rc-65903583-20240805",
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.7",
     "tailwindcss-animate": "^1.0.7"
@@ -49,8 +49,8 @@
     "typescript": "^5.5.4"
   },
   "overrides": {
-    "react": "^19.0.0-rc-8269d55d-20240802",
-    "react-dom": "^19.0.0-rc-8269d55d-20240802",
+    "react": "^19.0.0-rc-65903583-20240805",
+    "react-dom": "^19.0.0-rc-65903583-20240805",
     "@types/react": "npm:types-react@rc",
     "@types/react-dom": "npm:types-react-dom@rc"
   },
