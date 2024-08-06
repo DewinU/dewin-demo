@@ -13,10 +13,13 @@ import {
 import { Button } from '@/components/ui/button'
 import type { Todo } from '@/db/schema'
 import { ArchiveX } from 'lucide-react'
+import { startTransition } from 'react'
 export function AlertDialogDemo({
   todo,
+  setOptimisticTodos,
 }: {
   todo: Todo & { isSending?: boolean }
+  setOptimisticTodos: any
 }) {
   return (
     <AlertDialog>
@@ -33,15 +36,18 @@ export function AlertDialogDemo({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            This action cannot be undone. This will permanently delete your todo
+            and remove your data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              await deleteTodo(todo.id)
+              startTransition(async () => {
+                setOptimisticTodos({ type: 'DELETE_TODO', payload: todo.id })
+                await deleteTodo(todo.id)
+              })
             }}
             className='bg-red-700 text-destructive-foreground hover:bg-red-700/90'>
             Delete

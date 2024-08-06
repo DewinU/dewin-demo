@@ -21,7 +21,7 @@ export async function addTodo(todoText: string) {
   try {
     await db.insert(todos).values({ title: todoText })
     //add 10 seconds lag
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    //await new Promise(resolve => setTimeout(resolve, 2000))
   } catch (err) {
     console.error(err)
     return { error: 'An error occurred while adding the todo' }

@@ -8,23 +8,40 @@ import { cn } from '@/lib/utils'
 import { AlertDialogDemo } from '@/components/todos/TodoDeleteModal'
 
 export default function TodosList({ todos }: { todos: any }) {
-  const [optimisticTodos, addOptimisticTodo] = useOptimistic(
+  const [optimisticTodos, setOptimisticTodos] = useOptimistic(
     todos,
-    (state, newItem: string) => [
-      ...state,
-      {
-        isSending: true,
-        id: state.length + 1,
-        title: `${newItem}`,
-        completed: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ],
+    (state, action: any) => {
+      switch (action.type) {
+        case 'ADD_TODO':
+          return [
+            ...state,
+            {
+              title: action.payload,
+              isSending: true,
+              id: state.length + 1,
+              completed: 0,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          ]
+        case 'DELETE_TODO':
+          return state.filter((todo: Todo) => todo.id !== action.payload)
+
+        case 'UPDATE_TODO':
+          return state.map((todo: Todo) =>
+            todo.id === action.payload.id
+              ? { ...todo, ...action.payload }
+              : todo,
+          )
+      }
+    },
   )
   const [addState, addTodoAction, isAddPending] = useActionState(
     async (previousState: any, formData: FormData) => {
-      addOptimisticTodo(formData.get('todo') as string)
+      setOptimisticTodos({
+        type: 'ADD_TODO',
+        payload: formData.get('todo') as string,
+      })
       await addTodo(formData.get('todo') as string)
     },
     null,
@@ -73,7 +90,10 @@ export default function TodosList({ todos }: { todos: any }) {
             )}
             key={todo.id}>
             <span>{todo.title}</span>
-            <AlertDialogDemo todo={todo} />
+            <AlertDialogDemo
+              todo={todo}
+              setOptimisticTodos={setOptimisticTodos}
+            />
           </li>
         ))}
       </ul>
