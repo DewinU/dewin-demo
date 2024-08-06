@@ -41,8 +41,6 @@ export default function TodosList({ todos }: { todos: any }) {
               ? { ...todo, ...action.payload }
               : todo,
           )
-        default:
-          return
       }
     },
   )
