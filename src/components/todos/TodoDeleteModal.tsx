@@ -14,13 +14,13 @@ import { Button } from '@/components/ui/button'
 import type { Todo } from '@/db/schema'
 import { ArchiveX } from 'lucide-react'
 import { startTransition } from 'react'
+import { useTodoContext } from './TodosList'
 export function AlertDialogDemo({
   todo,
-  setOptimisticTodos,
 }: {
   todo: Todo & { isSending?: boolean }
-  setOptimisticTodos: any
 }) {
+  const { setOptimisticTodos } = useTodoContext()
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

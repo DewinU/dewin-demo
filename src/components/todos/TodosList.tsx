@@ -1,11 +1,19 @@
 'use client'
-import { useActionState, useOptimistic } from 'react'
+import {
+  createContext,
+  use,
+  useActionState,
+  useContext,
+  useOptimistic,
+} from 'react'
 import { addTodo, deleteTodo } from '@/actions/todos'
 import { Button } from '@/components/ui/button'
 import { Loader2, ArchiveX } from 'lucide-react'
 import type { Todo } from '@/db/schema'
 import { cn } from '@/lib/utils'
 import { AlertDialogDemo } from '@/components/todos/TodoDeleteModal'
+
+const TodoContext = createContext<TodoContextType | null>(null)
 
 export default function TodosList({ todos }: { todos: any }) {
   const [optimisticTodos, setOptimisticTodos] = useOptimistic(
@@ -33,10 +41,12 @@ export default function TodosList({ todos }: { todos: any }) {
               ? { ...todo, ...action.payload }
               : todo,
           )
+        default:
+          return
       }
     },
   )
-  const [addState, addTodoAction, isAddPending] = useActionState(
+  const [state, addTodoAction, isPending] = useActionState(
     async (previousState: any, formData: FormData) => {
       setOptimisticTodos({
         type: 'ADD_TODO',
@@ -55,7 +65,8 @@ export default function TodosList({ todos }: { todos: any }) {
   //   null,
   // )
   return (
-    <>
+    <TodoContext.Provider
+      value={{ todos, addTodo, deleteTodo, setOptimisticTodos }}>
       <form
         className='inline-flex flex-col items-center gap-2'
         action={addTodoAction}>
@@ -68,8 +79,8 @@ export default function TodosList({ todos }: { todos: any }) {
             type='text'
             placeholder='Enter a new todo'
           />
-          <Button className='w-36' type='submit' disabled={isAddPending}>
-            {isAddPending ? (
+          <Button className='w-36' type='submit' disabled={isPending}>
+            {isPending ? (
               <>
                 <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 Please wait...
@@ -90,13 +101,25 @@ export default function TodosList({ todos }: { todos: any }) {
             )}
             key={todo.id}>
             <span>{todo.title}</span>
-            <AlertDialogDemo
-              todo={todo}
-              setOptimisticTodos={setOptimisticTodos}
-            />
+            <AlertDialogDemo todo={todo} />
           </li>
         ))}
       </ul>
-    </>
+    </TodoContext.Provider>
   )
+}
+
+export function useTodoContext() {
+  const context = useContext(TodoContext)
+  if (!context) {
+    throw new Error('useTodoContext must be used within a TodoProvider')
+  }
+  return context
+}
+
+export type TodoContextType = {
+  todos: Todo[]
+  addTodo: (title: string) => void
+  deleteTodo: (id: number) => void
+  setOptimisticTodos: (action: any) => void
 }
