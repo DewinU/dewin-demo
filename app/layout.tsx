@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import NavBar from '@/components/custom/NavBar'
+import NavBar from '@/components/shared/NavBar'
 import { geistMono, geistSans } from './fonts/fonts'
 
 export const metadata: Metadata = {

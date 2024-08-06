@@ -1,4 +1,4 @@
-import NavBar from '@/components/custom/NavBar'
+import NavBar from '@/components/shared/NavBar'
 
 export default function DashBoardLayout({
   children,

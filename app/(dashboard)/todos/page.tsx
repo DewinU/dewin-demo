@@ -17,9 +17,8 @@ export default async function TodosPage() {
   const todos = await getCacheTodos()
 
   return (
-    <main className='ml-36 flex flex-col items-center'>
-      <h1>Todos</h1>
-      <p>Manage your todos</p>
+    <main className='ml-36 inline-flex flex-col px-10 py-5'>
+      <h1 className='text-center'>Todos</h1>
       <TodosList todos={todos} />
     </main>
   )

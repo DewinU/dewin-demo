@@ -1,6 +1,7 @@
 'use server'
 import { db } from '@/db'
 import { todos } from '@/db/schema'
+import { eq } from 'drizzle-orm'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
@@ -28,4 +29,13 @@ export async function addTodo(todoText: string) {
     // revalidatePath('/todos', 'page')
     revalidateTag('todos')
   }
+}
+
+export async function deleteTodo(id: number) {
+  await db.delete(todos).where(eq(todos.id, id))
+
+  //add 10 seconds lag
+  //await new Promise(resolve => setTimeout(resolve, 2000))
+
+  revalidateTag('todos')
 }
