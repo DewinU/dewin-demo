@@ -12,15 +12,17 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import type { Todo } from '@/db/schema'
-import { ArchiveX } from 'lucide-react'
+import { ArchiveX, Trash2 } from 'lucide-react'
 import { startTransition } from 'react'
-import { useTodoContext } from './TodosList'
-export function AlertDialogDemo({
+// import { useTodoContext } from './TodosList'
+export function DeleteTodoModal({
   todo,
+  setOptimisticTodos,
 }: {
   todo: Todo & { isSending?: boolean }
+  setOptimisticTodos: any
 }) {
-  const { setOptimisticTodos } = useTodoContext()
+  // const { setOptimisticTodos } = useTodoContext()
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -29,7 +31,7 @@ export function AlertDialogDemo({
           size={'sm'}
           className='bg-red-700'
           variant={'destructive'}>
-          <ArchiveX className='h-4 w-4' />
+          <Trash2 className='h-4 w-4' />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -43,14 +45,15 @@ export function AlertDialogDemo({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={async () => {
+            onClick={() => {
               startTransition(async () => {
                 setOptimisticTodos({ type: 'DELETE_TODO', payload: todo.id })
                 await deleteTodo(todo.id)
               })
             }}
-            className='bg-red-700 text-destructive-foreground hover:bg-red-700/90'>
+            className='bg-red-800 text-destructive-foreground hover:bg-red-600/90'>
             Delete
+            <Trash2 className='ml-2 h-5 w-5' />
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

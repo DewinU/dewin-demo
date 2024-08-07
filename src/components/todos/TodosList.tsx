@@ -1,26 +1,27 @@
 'use client'
 import {
   createContext,
-  use,
+  startTransition,
   useActionState,
   useContext,
   useOptimistic,
 } from 'react'
-import { addTodo, deleteTodo } from '@/actions/todos'
+import { addTodo, updateTodo } from '@/actions/todos'
 import { Button } from '@/components/ui/button'
-import { Loader2, ArchiveX } from 'lucide-react'
+import { Loader2, ArchiveX, Pencil } from 'lucide-react'
 import type { Todo } from '@/db/schema'
 import { cn } from '@/lib/utils'
-import { AlertDialogDemo } from '@/components/todos/TodoDeleteModal'
+import { DeleteTodoModal } from '@/components/todos/TodoDeleteModal'
 
-const TodoContext = createContext<TodoContextType | null>(null)
+// const TodoContext = createContext<TodoContextType | null>(null)
 
 export default function TodosList({ todos }: { todos: any }) {
   const [optimisticTodos, setOptimisticTodos] = useOptimistic(
     todos,
-    (state, action: any) => {
+    (state: (Todo & { isSending?: boolean })[], action: any) => {
       switch (action.type) {
         case 'ADD_TODO':
+          console.log('ADD_TODO', action.payload)
           return [
             ...state,
             {
@@ -36,11 +37,14 @@ export default function TodosList({ todos }: { todos: any }) {
           return state.filter((todo: Todo) => todo.id !== action.payload)
 
         case 'UPDATE_TODO':
-          return state.map((todo: Todo) =>
-            todo.id === action.payload.id
-              ? { ...todo, ...action.payload }
-              : todo,
+          const xd = state.map((todo: Todo) =>
+            todo.id === action.payload.id ? action.payload : todo,
           )
+          console.log('UPDATE_TODO', xd)
+          return xd
+
+        default:
+          return state
       }
     },
   )
@@ -63,8 +67,8 @@ export default function TodosList({ todos }: { todos: any }) {
   //   null,
   // )
   return (
-    <TodoContext.Provider
-      value={{ todos, addTodo, deleteTodo, setOptimisticTodos }}>
+    <>
+      {/* <TodoContext.Provider value={{ setOptimisticTodos }}> */}
       <form
         className='inline-flex flex-col items-center gap-2'
         action={addTodoAction}>
@@ -91,33 +95,64 @@ export default function TodosList({ todos }: { todos: any }) {
       </form>
       <h2>My Todos</h2>
       <ul className='flex flex-col gap-2'>
-        {optimisticTodos.map((todo: Todo & { isSending: boolean }) => (
+        {optimisticTodos.map((todo: Todo & { isSending?: boolean }) => (
           <li
             className={cn(
               'inline-flex items-center justify-between gap-2 rounded bg-gray-300 px-4 py-2',
               { 'bg-gray-200 text-gray-400': todo.isSending },
             )}
             key={todo.id}>
-            <span>{todo.title}</span>
-            <AlertDialogDemo todo={todo} />
+            <div className='flex items-center gap-2'>
+              <input
+                type='checkbox'
+                className='peer h-4 w-4 cursor-pointer'
+                defaultChecked={!!todo.completed}
+                onClick={() => {
+                  startTransition(async () => {
+                    setOptimisticTodos({
+                      type: 'UPDATE_TODO',
+                      payload: {
+                        ...todo,
+                        completed: todo.completed ? 0 : 1,
+                      },
+                    })
+                    await updateTodo(todo.id, todo.completed ? 0 : 1)
+                  })
+                }}
+              />
+              <span className='peer-checked:line-through'>{todo.title}</span>
+            </div>
+            <div className='flex gap-2'>
+              {/* <Button
+                disabled={todo.isSending}
+                className='bg-yellow-700 text-destructive-foreground hover:bg-yellow-600/90'
+                size={'sm'}>
+                <Pencil className='h-4 w-4' />
+              </Button> */}
+              <DeleteTodoModal
+                todo={todo}
+                setOptimisticTodos={setOptimisticTodos}
+              />
+            </div>
           </li>
         ))}
       </ul>
-    </TodoContext.Provider>
+      {/* </TodoContext.Provider> */}
+    </>
   )
 }
 
-export function useTodoContext() {
-  const context = useContext(TodoContext)
-  if (!context) {
-    throw new Error('useTodoContext must be used within a TodoProvider')
-  }
-  return context
-}
+// export function useTodoContext() {
+//   const context = useContext(TodoContext)
+//   if (!context) {
+//     throw new Error('useTodoContext must be used within a TodoProvider')
+//   }
+//   return context
+// }
 
-export type TodoContextType = {
-  todos: Todo[]
-  addTodo: (title: string) => void
-  deleteTodo: (id: number) => void
-  setOptimisticTodos: (action: any) => void
-}
+// export type TodoContextType = {
+//   // todos: Todo[]
+//   // addTodo: (title: string) => void
+//   // deleteTodo: (id: number) => void
+//   setOptimisticTodos: (action: any) => void
+// }
