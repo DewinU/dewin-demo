@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // reactStrictMode: true,
   experimental: {
     reactCompiler: true,
   },
@@ -7,6 +8,9 @@ const nextConfig = {
     fetches: {
       fullUrl: true,
     },
+  },
+  images: {
+    formats: ['image/avif', 'image/webp'],
   },
 }
 

@@ -14,15 +14,13 @@ import { Button } from '@/components/ui/button'
 import type { Todo } from '@/db/schema'
 import { ArchiveX, Trash2 } from 'lucide-react'
 import { startTransition } from 'react'
-// import { useTodoContext } from './TodosList'
+import { useTodos } from './TodoProvider'
 export function DeleteTodoModal({
   todo,
-  setOptimisticTodos,
 }: {
   todo: Todo & { isSending?: boolean }
-  setOptimisticTodos: any
 }) {
-  // const { setOptimisticTodos } = useTodoContext()
+  const { deleteTodoOptimistic } = useTodos()
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -47,7 +45,7 @@ export function DeleteTodoModal({
           <AlertDialogAction
             onClick={() => {
               startTransition(async () => {
-                setOptimisticTodos({ type: 'DELETE_TODO', payload: todo.id })
+                deleteTodoOptimistic(todo.id)
                 await deleteTodo(todo.id)
               })
             }}

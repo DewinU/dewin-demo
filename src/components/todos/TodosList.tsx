@@ -1,60 +1,25 @@
 'use client'
-import {
-  createContext,
-  startTransition,
-  useActionState,
-  useContext,
-  useOptimistic,
-} from 'react'
+import { startTransition, useActionState } from 'react'
 import { addTodo, updateTodo } from '@/actions/todos'
 import { Button } from '@/components/ui/button'
 import { Loader2, ArchiveX, Pencil } from 'lucide-react'
 import type { Todo } from '@/db/schema'
 import { cn } from '@/lib/utils'
 import { DeleteTodoModal } from '@/components/todos/TodoDeleteModal'
+import { useTodos } from './TodoProvider'
 
-// const TodoContext = createContext<TodoContextType | null>(null)
-
-export default function TodosList({ todos }: { todos: any }) {
-  const [optimisticTodos, setOptimisticTodos] = useOptimistic(
+export default function TodosList() {
+  const {
     todos,
-    (state: (Todo & { isSending?: boolean })[], action: any) => {
-      switch (action.type) {
-        case 'ADD_TODO':
-          console.log('ADD_TODO', action.payload)
-          return [
-            ...state,
-            {
-              title: action.payload,
-              isSending: true,
-              id: state.length + 1,
-              completed: 0,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            },
-          ]
-        case 'DELETE_TODO':
-          return state.filter((todo: Todo) => todo.id !== action.payload)
-
-        case 'UPDATE_TODO':
-          const xd = state.map((todo: Todo) =>
-            todo.id === action.payload.id ? action.payload : todo,
-          )
-          console.log('UPDATE_TODO', xd)
-          return xd
-
-        default:
-          return state
-      }
-    },
-  )
+    updateTodoOptimistic,
+    addTodoOptimistic,
+    deleteTodoOptimistic,
+  } = useTodos()
   const [state, addTodoAction, isPending] = useActionState(
     async (previousState: any, formData: FormData) => {
-      setOptimisticTodos({
-        type: 'ADD_TODO',
-        payload: formData.get('todo') as string,
-      })
-      await addTodo(formData.get('todo') as string)
+      const title = formData.get('todo') as string
+      addTodoOptimistic(title)
+      await addTodo(title)
     },
     null,
   )
@@ -68,7 +33,6 @@ export default function TodosList({ todos }: { todos: any }) {
   // )
   return (
     <>
-      {/* <TodoContext.Provider value={{ setOptimisticTodos }}> */}
       <form
         className='inline-flex flex-col items-center gap-2'
         action={addTodoAction}>
@@ -95,7 +59,7 @@ export default function TodosList({ todos }: { todos: any }) {
       </form>
       <h2>My Todos</h2>
       <ul className='flex flex-col gap-2'>
-        {optimisticTodos.map((todo: Todo & { isSending?: boolean }) => (
+        {todos.map((todo: Todo & { isSending?: boolean }) => (
           <li
             className={cn(
               'inline-flex items-center justify-between gap-2 rounded bg-gray-300 px-4 py-2',
@@ -109,13 +73,7 @@ export default function TodosList({ todos }: { todos: any }) {
                 defaultChecked={!!todo.completed}
                 onClick={() => {
                   startTransition(async () => {
-                    setOptimisticTodos({
-                      type: 'UPDATE_TODO',
-                      payload: {
-                        ...todo,
-                        completed: todo.completed ? 0 : 1,
-                      },
-                    })
+                    updateTodoOptimistic(todo)
                     await updateTodo(todo.id, todo.completed ? 0 : 1)
                   })
                 }}
@@ -129,30 +87,11 @@ export default function TodosList({ todos }: { todos: any }) {
                 size={'sm'}>
                 <Pencil className='h-4 w-4' />
               </Button> */}
-              <DeleteTodoModal
-                todo={todo}
-                setOptimisticTodos={setOptimisticTodos}
-              />
+              <DeleteTodoModal todo={todo} />
             </div>
           </li>
         ))}
       </ul>
-      {/* </TodoContext.Provider> */}
     </>
   )
 }
-
-// export function useTodoContext() {
-//   const context = useContext(TodoContext)
-//   if (!context) {
-//     throw new Error('useTodoContext must be used within a TodoProvider')
-//   }
-//   return context
-// }
-
-// export type TodoContextType = {
-//   // todos: Todo[]
-//   // addTodo: (title: string) => void
-//   // deleteTodo: (id: number) => void
-//   setOptimisticTodos: (action: any) => void
-// }
