@@ -27,8 +27,16 @@ function todosReducer(state: (Todo & { isSending?: boolean })[], action: any) {
         },
       ]
     case 'DELETE_TODO':
-      console.log('DELETE_TODO', action.payload)
-      return state.filter((todo: Todo) => todo.id !== action.payload)
+      // console.log('DELETE_TODO', action.payload)
+      // return state.filter((todo: Todo) => todo.id !== action.payload)
+      return state.map((todo: Todo) =>
+        todo.id === action.payload
+          ? {
+              ...todo,
+              isSending: true,
+            }
+          : todo,
+      )
 
     case 'UPDATE_TODO':
       console.log('UPDATE_TODO', action.payload)
