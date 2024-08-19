@@ -14,4 +14,17 @@ export const todos = sqliteTable('todos', {
     .default(sql`CURRENT_TIMESTAMP`),
 })
 
+export const users = sqliteTable('users', {
+  id: integer('id').primaryKey(),
+  email: text('email').notNull(),
+  password: text('password').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+})
+
+export type User = typeof users.$inferSelect
 export type Todo = typeof todos.$inferSelect

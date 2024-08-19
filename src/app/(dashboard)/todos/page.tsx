@@ -8,8 +8,8 @@ import { Suspense } from 'react'
 export default function TodosPage() {
   // const todos = await db.query.todos.findMany()
   const getCacheTodos = cache(
-    () => {
-      return db.query.todos.findMany()
+    async () => {
+      return await db.query.todos.findMany()
     },
     ['todos'],
     {

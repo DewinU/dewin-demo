@@ -1,3 +1,4 @@
+import LogOutButton from '../auth/LogOutButton'
 import NavLink from './NavLink'
 import {
   House,
@@ -6,6 +7,7 @@ import {
   Contact,
   Settings,
   BookCheck,
+  LogOut,
 } from 'lucide-react'
 
 export default function NavBar() {
@@ -32,6 +34,7 @@ export default function NavBar() {
       <NavLink href='/settings' label='Settings'>
         <Settings />
       </NavLink>
+      <LogOutButton />
     </nav>
   )
 }

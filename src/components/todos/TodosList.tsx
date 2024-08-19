@@ -7,8 +7,10 @@ import type { Todo } from '@/db/schema'
 import { cn } from '@/lib/utils'
 import { DeleteTodoModal } from '@/components/todos/TodoDeleteModal'
 import { useTodos } from './TodoProvider'
+import { useAuth } from '../auth/AuthProvider'
 
 export default function TodosList() {
+  const user = useAuth()
   const {
     todos,
     updateTodoOptimistic,
@@ -33,6 +35,7 @@ export default function TodosList() {
   // )
   return (
     <>
+      <p>{`Welcome ${user?.email}`}</p>
       <form
         className='inline-flex flex-col items-center gap-2'
         action={addTodoAction}>
